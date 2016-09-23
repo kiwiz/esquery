@@ -1,0 +1,22 @@
+{
+    "name": "kiwiz/esquery",
+    "type": "library",
+    "description": "Elasticsearch querying library",
+    "homepage": "https://github.com/kiwiz/esquery",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {"ESQuery\\": "src"}
+    },
+    "authors": [
+        {
+            "name": "k_",
+            "email": "z@kwi.li"
+        }
+    ],
+    "require": {
+        "elasticsearch/elasticsearch": "^2.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.8"
+    }
+}
