@@ -1,7 +1,7 @@
 ESQuery
 ========
 
-ESQuery is the query parser for querying Elasticsearch. Each ESQuery query consists of one or more "commands", separated by the pipe (`|`) character. During execution, each command is translated into an Elasticsearch DSL query and sent to the server. Any results that are returned get passed off to the next command in the chain.
+ESQuery is a query parser for querying Elasticsearch. Each ESQuery query consists of one or more "commands", separated by the pipe (`|`) character. During execution, each command is translated into an Elasticsearch DSL query and sent to the server. Any results that are returned get passed off to the next command in the chain.
 
 
 Structure
