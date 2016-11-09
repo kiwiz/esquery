@@ -37,21 +37,6 @@ class Util {
         }, $arr));
     }
 
-    // Given two timestamps, return the inclusive list of dates between them.
-    public static function getIndices($from_ts, $to_ts) {
-        $dates = [];
-        $current = new \DateTime("@$from_ts");
-        $to = new \DateTime("@$to_ts");
-        // Zero out the time component.
-        $current->setTime(0, 0);
-        $to->setTime(0, 0);
-        while ($current <= $to) {
-            $dates[] = $current->format('Y.m.d');
-            $current = $current->modify('+1day');
-        }
-        return $dates;
-    }
-
     // Parser helper. Flatten results into an array.
     public static function combine($first, $rest, $idx) {
         $ret = [];
@@ -71,6 +56,57 @@ class Util {
         foreach($rest as $val) {
             $ret[$val[$idx][0]] = $val[$idx][1];
         }
+        return $ret;
+    }
+
+    /**
+     * Generate a list of date-based indices.
+     * @param string $format The index format.
+     * @param string $interval The interval size (h,d,w,m,y).
+     * @param int $from_ts Start timestamp.
+     * @param int $to_ts End timestamp.
+     * @return string[] List of indices.
+     */
+    public static function generateDateIndices($format, $interval, $from_ts, $to_ts) {
+        $fmt_arr = [];
+        $escaped = false;
+
+        foreach(str_split($format) as $chr) {
+            switch($chr) {
+            case '[':
+                $escaped = true;
+                break;
+            case ']':
+                $escaped = false;
+                break;
+            default:
+                $fmt_arr[] = $escaped ? "\\$chr":$chr;
+                break;
+            }
+        }
+        $fmt_str = implode('', $fmt_arr);
+
+        $ret = [];
+        $current = new \DateTime("@$from_ts");
+        $to = new \DateTime("@$to_ts");
+
+        $interval_map = [
+            'y' => 'year',
+            'm' => 'month',
+            'w' => 'week',
+            'd' => 'day',
+            'h' => 'hour',
+        ];
+        $interval_str = Util::get($interval_map, $interval, 'd');
+
+        // Zero out the time component.
+        $current->setTime($interval == 'h' ? $current->format('H'):0, 0);
+
+        while ($current <= $to) {
+            $ret[] = $current->format($fmt_str);
+            $current = $current->modify("+1$interval_str");
+        }
+
         return $ret;
     }
 }

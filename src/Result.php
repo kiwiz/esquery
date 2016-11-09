@@ -175,11 +175,7 @@ class Result implements \JsonSerializable {
             $query_data['index'] = $settings['index'];
 
             if(Util::get($settings, 'date_based', false)) {
-                $index = $query_data['index'];
-
-                $query_data['index'] = implode(',', array_map(function($x) use ($index) {
-                    return "$index-$x";
-                }, Util::getIndices($from, $to)));
+                $query_data['index'] = implode(',', Util::generateDateIndices($query_data['index'], Util::get($settings, 'date_interval'), $from, $to));
             }
         }
 

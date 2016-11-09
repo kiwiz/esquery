@@ -63,22 +63,6 @@ class UtilTest extends PHPUnit_Framework_TestCase {
         $this->assertSame(ESQuery\Util::escapeGroup($data), $expected);
     }
 
-    public function getIndicesProvider() {
-        return [
-            [1451606400, 1451606400, ['2016.01.01']],
-            [1451606399, 1451606400, ['2015.12.31', '2016.01.01']],
-            [1451606399, 1451606400, ['2015.12.31', '2016.01.01']],
-            [1451606399, 1452383999, ['2015.12.31', '2016.01.01', '2016.01.02', '2016.01.03', '2016.01.04', '2016.01.05', '2016.01.06', '2016.01.07', '2016.01.08', '2016.01.09']],
-        ];
-    }
-
-    /**
-     * @dataProvider getIndicesProvider
-     */
-    public function testGetIndices($low, $high, $expected) {
-        $this->assertSame(ESQuery\Util::getIndices($low, $high), $expected);
-    }
-
     public function combineProvider() {
         return [
             ['a', [[0, 'b'], [0, 'c']], 1, ['a', 'b', 'c']],

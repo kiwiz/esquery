@@ -82,7 +82,7 @@ class EngineTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testJoinQuery() {
-        $query = 'type:cat | join source:name target:nickname';
+        $query = 'type:cat | join source_field:name target_field:nickname';
         $settings = [
             'index' => 'test',
         ];
