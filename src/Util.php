@@ -97,7 +97,7 @@ class Util {
             'd' => 'day',
             'h' => 'hour',
         ];
-        $interval_str = Util::get($interval_map, $interval, 'd');
+        $interval_str = Util::get($interval_map, $interval, 'day');
 
         // Zero out the time component.
         $current->setTime($interval == 'h' ? $current->format('H'):0, 0);
