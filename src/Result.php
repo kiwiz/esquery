@@ -330,13 +330,14 @@ class Result implements \JsonSerializable {
                 return ['prefix' => [$node[1] => $node[2]]];
 
             case Token::Q_QUERYSTRING:
-                return ['query' => [
-                    'query_string' => [
-                        'default_field' => $node[1],
-                        'query' => Util::escapeGroup($node[2]),
-                        'default_operator' => 'AND'
-                    ]
-                ]];
+                $query = [
+                    'query' => Util::escapeGroup($node[2]),
+                    'default_operator' => 'AND'
+                ];
+                if(!is_null($node[1])) {
+                    $query['default_field'] = $node[1];
+                }
+                return ['query' => ['query_string' => $query]];
 
             case Token::X_LIST:
                 $arr = is_array($node[2]) ?

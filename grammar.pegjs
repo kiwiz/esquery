@@ -227,6 +227,8 @@ QueryClause
 
   / field:Field SEP val:WildCardValue { return [Token::Q_QUERYSTRING, $field, $val]; }
 
+  / val:WildCardValue { return [Token::Q_QUERYSTRING, null, $val]; }
+
 RegexValue
   = chrs:RegexChar* { return implode('', $chrs); }
 
