@@ -164,7 +164,7 @@ class Result implements \JsonSerializable {
         $filter_data = $this->constructFilter($source, $query, $date_field, $from, $to);
         if(!is_null($filter_data)) {
             $query_body['query'] = [
-                'filtered' => [
+                'bool' => [
                     'filter' => $filter_data
                 ]
             ];
@@ -211,7 +211,7 @@ class Result implements \JsonSerializable {
         if(...) {
             $meta['scroll'] = true;
         }
-        */
+         */
 
         // Construct setting clauses.
         $query_body = array_merge($query_body, $this->constructSettings($settings));
@@ -235,26 +235,26 @@ class Result implements \JsonSerializable {
         // There are 2 types of queries. Process each one separately.
         $filters = [];
         switch($query[0]) {
-            case Token::C_SEARCH:
-                $filters = $query[1];
-                break;
-            case Token::C_JOIN:
-                $filters = $query[3];
-                $terms = [];
-                foreach($source as $row) {
-                    $terms[] = $row[$query[1]];
-                }
-                $filter = [Token::X_LIST, $query[2], $terms, false];
+        case Token::C_SEARCH:
+            $filters = $query[1];
+            break;
+        case Token::C_JOIN:
+            $filters = $query[3];
+            $terms = [];
+            foreach($source as $row) {
+                $terms[] = $row[$query[1]];
+            }
+            $filter = [Token::X_LIST, $query[2], $terms, false];
 
-                // AND the filter with the rest of the filters (if they exist).
-                if(count($filters)) {
-                    $filters = [Token::F_AND, [$filters, $filter]];
-                } else {
-                    $filters = $filter;
-                }
-                break;
-            default:
-                throw new ElasticException('Unexpected query type');
+            // AND the filter with the rest of the filters (if they exist).
+            if(count($filters)) {
+                $filters = [Token::F_AND, [$filters, $filter]];
+            } else {
+                $filters = $filter;
+            }
+            break;
+        default:
+            throw new ElasticException('Unexpected query type');
         }
 
         // Add time range filter.
@@ -276,22 +276,22 @@ class Result implements \JsonSerializable {
         }
 
         switch($node[0]) {
-            case Token::F_AND:
-                $list = [];
-                foreach($node[1] as $c_node) {
-                    $list[] = $this->constructFilterRecurse($c_node);
-                }
-                return ['and' => $list];
+        case Token::F_AND:
+            $list = [];
+            foreach($node[1] as $c_node) {
+                $list[] = $this->constructFilterRecurse($c_node);
+            }
+            return ['bool' => ['filter' => $list]];
 
-            case Token::F_OR:
+        case Token::F_OR:
                 $list = [];
                 foreach($node[1] as $c_node) {
                     $list[] = $this->constructFilterRecurse($c_node);
                 }
-                return ['or' => $list];
+                return ['bool' => ['should' => $list]];
 
             case Token::F_NOT:
-                return ['not' => $this->constructFilterRecurse($node[1])];
+                return ['bool' => ['must_not' => $this->constructFilterRecurse($node[1])]];
 
 //            case Token::F_IDS:
 
@@ -299,7 +299,7 @@ class Result implements \JsonSerializable {
                 return ['exists' => ['field' => $node[1]]];
 
             case Token::F_MISSING:
-                return ['missing' => ['field' => $node[1]]];
+                return ['bool' => ['must_not' => ['exists' => ['field' => $node[1]]]]];
 
 //            case Token::F_QUERY:
 
@@ -337,7 +337,7 @@ class Result implements \JsonSerializable {
                 if(!is_null($node[1])) {
                     $query['default_field'] = $node[1];
                 }
-                return ['query' => ['query_string' => $query]];
+                return ['query_string' => $query];
 
             case Token::X_LIST:
                 $arr = is_array($node[2]) ?
@@ -377,12 +377,10 @@ class Result implements \JsonSerializable {
             if(count($arr) > 1000) {
                 throw new ElasticException('Too many entries in list');
             }
-            return ['query' => [
-                'query_string' => [
+            return ['query_string' => [
                     'default_field' => $field,
                     'default_operator' => 'OR',
                     'query' => implode(' ', array_map(['\ESQuery\Util', 'escapeString'], $arr))
-                ]
             ]];
         } else {
             // Generate a lookup table.
