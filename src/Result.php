@@ -380,7 +380,8 @@ class Result implements \JsonSerializable {
             return ['query' => [
                 'query_string' => [
                     'default_field' => $field,
-                    'query' => implode(' OR ', array_map(['\ESQuery\Util', 'escapeGroup'], $arr))
+                    'default_operator' => 'OR',
+                    'query' => implode(' ', array_map(['\ESQuery\Util', 'escapeString'], $arr))
                 ]
             ]];
         } else {
