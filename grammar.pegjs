@@ -215,8 +215,8 @@ QueryClause
     { $this->error('Invalid regex'); }) { return array_merge([Token::F_REGEX, $field], $ret); }
 
   / field:Field SEP '(' ret:(
-    _? first:WildCardValue rest:(_ WildCardValue)* _? ')'
-      { return [Util::combine($first, $rest, 1)]; } /
+    _? first:WildCardValue rest:((_ 'OR')? _ WildCardValue)* _? ')'
+      { return [Util::combine($first, $rest, 2)]; } /
     { $this->error('Invalid list'); }) { return array_merge([Token::X_LIST, $field], $ret, [true]); }
 
   / field:Field SEP esc:('@' '@'?) ret:(

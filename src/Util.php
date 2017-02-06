@@ -12,16 +12,20 @@ class Util {
     }
 
     // Escape special characters in a query.
-    public static function escapeString($str) {
-        return str_replace([
+    public static function escapeString($str, $allow_wildcards=false) {
+        $needles = [
             '\\', '+', '-', '=', '&&', '||', '>', '<', '!', '(', ')',
-            '{', '}', '[', ']', '^', '"', '~', '*', '?', ':',
-            '/', ' '
-        ], [
+            '{', '}', '[', ']', '^', '"', '~', ':', '/', ' '
+        ];
+        $replacements = [
             '\\\\', '\\+', '\\-', '\\=', '\\&&', '\\||', '\\>', '\\<', '\\!', '\\(', '\\)',
-            '\\{', '\\}', '\\[', '\\]', '\\^', '\\"', '\\~', '\\*', '\\?', '\\:',
-            '\\/', '\\ '
-        ], $str);
+            '\\{', '\\}', '\\[', '\\]', '\\^', '\\"', '\\~', '\\:', '\\/', '\\ '
+        ];
+        if(!$allow_wildcards) {
+            $needles = array_merge($needles, ['*', '?']);
+            $replacements = array_merge($replacements, ['\\*', '\\?']);
+        }
+        return str_replace($needles, $replacements, $str);
     }
 
     // Escape special characters in an array of query chunks.
