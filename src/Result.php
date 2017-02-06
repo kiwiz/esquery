@@ -12,7 +12,6 @@ namespace ESQuery;
  *  to - To date when querying. [time()]
  *  from - From date when querying. [time()]
  *  size - Max result size. [100]
- *  allow_leading_wildcard - Whether to allow leading wildcards in the query [false]
  *  index - Base name of the index to query on. []
  *  date_field - The date field to query on. []
  *  date_based - Whether the index is date based. [false]
@@ -332,7 +331,8 @@ class Result implements \JsonSerializable {
             case Token::Q_QUERYSTRING:
                 $query = [
                     'query' => Util::escapeGroup($node[2]),
-                    'default_operator' => 'AND'
+                    'default_operator' => 'AND',
+                    'allow_leading_wildcard' => true
                 ];
                 if(!is_null($node[1])) {
                     $query['default_field'] = $node[1];
@@ -477,7 +477,7 @@ class Result implements \JsonSerializable {
             $ret['sort'] = array_map(function($x) { return [$x[0] => ['order' => $x[1] ? 'asc':'desc']]; }, $settings['sort']);
         }
 
-        $valid_keys = ['size', 'allow_leading_wildcard'];
+        $valid_keys = ['size'];
         foreach($valid_keys as $key) {
             if(array_key_exists($key, $settings)) {
                 $ret[$key] = $settings[$key];

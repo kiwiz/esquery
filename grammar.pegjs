@@ -28,7 +28,6 @@ Setting
     key:'from' SEP val:Date { return [$key, $val]; } /
     key:'size' SEP val:Integer { return [$key, $val]; } /
     key:'flatten' SEP val:Boolean { return [$key, $val]; } /
-    key:'allow_leading_wildcard' SEP val:Boolean { return [$key, $val]; } /
     key:'sort' SEP '[' val:SortsSetting ']' { return [$key, $val]; } /
 
     key:'fields' SEP '[' first:Field rest:(_ Field)* ']' { return [$key, Util::combine($first, $rest, 1)]; } /
