@@ -12,8 +12,6 @@ class Settings {
     public $from = null;
     /** @var int Max result size. */
     public $size = 100;
-    /** @var bool Whether to allow leading wildcards in the query. */
-    public $allow_leading_wildcard = false;
     /** @var string|null Base name of the index to query on. */
     public $index = null;
     /** @var string The date field to query on. */
@@ -49,7 +47,6 @@ class Settings {
         'to' => self::T_INT,
         'from' => self::T_INT,
         'size' => self::T_INT,
-        'allow_leading_wildcard' => self::T_BOOL,
         'index' => [self::T_NULL, self::T_STR],
         'date_field' => self::T_STR,
         'date_based' => T_BOOL,

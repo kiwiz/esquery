@@ -29,12 +29,6 @@ Syntax
 
 Options that can be enabled/disabled within each query. Each option is prefixed by a `$`.
 
-`allow_leading_wildcard`
-
-- Allows `*` or `?` as the first character. Makes for slow queries!
-- Type: bool
-- Example: `$allow_leading_wildcard:true`
-
 `sort`
 
 - A list of fields to sort on.
