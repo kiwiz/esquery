@@ -94,7 +94,7 @@ Integer
 WildCardValue
   = '"' chrs:DoubleQuotedChar* '"' { return [implode('', $chrs)]; }
   / "'" chrs:SingleQuotedChar* "'" { return [implode('', $chrs)]; }
-  / !"AND" !"OR" chunks:WildCardChunk* { return $chunks; }
+  / !"NOT" !"AND" !"OR" chunks:WildCardChunk* { return $chunks; }
 
 WildCardChunk
   = '*' { return Token::W_STAR; }
@@ -172,9 +172,9 @@ QueryAND
   }
 
 QueryNOT
-  =  a:QueryUnaryNOT b:(_ 'NOT' _ QueryUnaryNOT)? {
+  =  a:QueryUnaryNOT b:((_ 'AND')? _ 'NOT' _ QueryUnaryNOT)? {
     if(isset($b) && count($b)) {
-      return [Token::F_AND, [$a, [Token::F_NOT, $b[3]]]];
+      return [Token::F_AND, [$a, [Token::F_NOT, $b[4]]]];
     }
     return $a;
   }
