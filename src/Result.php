@@ -340,10 +340,16 @@ class Result implements \JsonSerializable {
                 return ['query_string' => $query];
 
             case Token::X_LIST:
-                $arr = is_array($node[2]) ?
-                    $node[2]:$this->getList($node[2]);
+                $is_arr = is_array($node[2]);
+                $inline = $node[3];
+                $arr = $is_arr ? $node[2]:$this->getList($node[2]);
+                if($is_arr) {
+                    $arr = array_map(['\ESQuery\Util', 'escapeGroup'], $arr);
+                } elseif($inline) {
+                    $arr = array_map(function($x) { return Util::escapeString($x, true); }, $arr);
+                }
 
-                return $this->processList($node[1], $arr, $node[3]);
+                return $this->processList($node[1], $arr, $inline);
 
             default:
                 throw new ElasticException('Unknown filter type');
@@ -380,7 +386,7 @@ class Result implements \JsonSerializable {
             return ['query_string' => [
                     'default_field' => $field,
                     'default_operator' => 'OR',
-                    'query' => implode(' ', array_map(['\ESQuery\Util', 'escapeString'], $arr))
+                    'query' => implode(' ', $arr)
             ]];
         } else {
             // Generate a lookup table.
