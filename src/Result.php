@@ -344,7 +344,7 @@ class Result implements \JsonSerializable {
                 $inline = $node[3];
                 $arr = $is_arr ? $node[2]:$this->getList($node[2]);
                 if($is_arr) {
-                    $arr = array_map(['\ESQuery\Util', 'escapeGroup'], $arr);
+                    $arr = array_map(function($x) { return Util::escapeGroup([$x]); }, $arr);
                 } elseif($inline) {
                     $arr = array_map(function($x) { return Util::escapeString($x, true); }, $arr);
                 }
