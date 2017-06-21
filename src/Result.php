@@ -330,7 +330,7 @@ class Result implements \JsonSerializable {
 
             case Token::Q_QUERYSTRING:
                 $query = [
-                    'query' => Util::escapeGroup($node[2]),
+                    'query' => Util::escapeGroup($node[2][0], $node[2][1]),
                     'default_operator' => 'AND',
                     'allow_leading_wildcard' => true
                 ];

@@ -29,10 +29,14 @@ class Util {
     }
 
     // Escape special characters in an array of query chunks.
-    public static function escapeGroup($arr) {
-        return implode('', array_map(function($x) {
+    public static function escapeGroup($arr, $wildcard=false) {
+        return implode('', array_map(function($x) use ($wildcard) {
             if(is_string($x)) {
-                return Util::escapeString($x);
+                if($wildcard) {
+                    return Util::escapeString($x);
+                } else {
+                    return '"' . str_replace('"', '\\"', $x) . '"';
+                }
             } else if($x == Token::W_STAR) {
                 return '*';
             } else if ($x == Token::W_QMARK) {
