@@ -4003,7 +4003,7 @@ class Parser{
     $this->peg_c65 = function($num) { return intval(implode('', $num)); };
     $this->peg_c66 = "\"";
     $this->peg_c67 = array( "type" => "literal", "value" => "\"", "description" => "\"\\\"\"" );
-    $this->peg_c68 = function($chrs) { return [implode('', $chrs)]; };
+    $this->peg_c68 = function($chrs) { return [[implode('', $chrs)], false]; };
     $this->peg_c69 = "'";
     $this->peg_c70 = array( "type" => "literal", "value" => "'", "description" => "\"'\"" );
     $this->peg_c71 = "NOT";
@@ -4012,7 +4012,7 @@ class Parser{
     $this->peg_c74 = array( "type" => "literal", "value" => "AND", "description" => "\"AND\"" );
     $this->peg_c75 = "OR";
     $this->peg_c76 = array( "type" => "literal", "value" => "OR", "description" => "\"OR\"" );
-    $this->peg_c77 = function($chunks) { return $chunks; };
+    $this->peg_c77 = function($chunks) { return [$chunks, true]; };
     $this->peg_c78 = "*";
     $this->peg_c79 = array( "type" => "literal", "value" => "*", "description" => "\"*\"" );
     $this->peg_c80 = function() { return Token::W_STAR; };

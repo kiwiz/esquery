@@ -91,9 +91,9 @@ Integer
 
 // Special values
 WildCardValue
-  = '"' chrs:DoubleQuotedChar* '"' { return [implode('', $chrs)]; }
-  / "'" chrs:SingleQuotedChar* "'" { return [implode('', $chrs)]; }
-  / !"NOT" !"AND" !"OR" chunks:WildCardChunk* { return $chunks; }
+  = '"' chrs:DoubleQuotedChar* '"' { return [[implode('', $chrs)], false]; }
+  / "'" chrs:SingleQuotedChar* "'" { return [[implode('', $chrs)], false]; }
+  / !"NOT" !"AND" !"OR" chunks:WildCardChunk* { return [$chunks, true]; }
 
 WildCardChunk
   = '*' { return Token::W_STAR; }
