@@ -60,7 +60,7 @@ class UtilTest extends PHPUnit_Framework_TestCase {
      * @dataProvider escapeGroupProvider
      */
     public function testGroupString($data, $expected) {
-        $this->assertSame(ESQuery\Util::escapeGroup($data), $expected);
+        $this->assertSame(ESQuery\Util::escapeGroup($data, true), $expected);
     }
 
     public function combineProvider() {
