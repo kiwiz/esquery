@@ -123,7 +123,7 @@ class Util {
         $escaped = false;
 
         $interval_map = [
-            'y' => 'YYYY',
+            'Y' => 'YYYY',
             'm' => 'MM',
             'w' => 'WW',
             'd' => 'DD',
