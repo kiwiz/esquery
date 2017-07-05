@@ -9,7 +9,10 @@ fs.readFile('grammar.pegjs', 'utf8', function (err,data) {
   }
 
   var parser = pegjs.buildParser(data, {
-    phppegjs: {parserNamespace: 'ESQuery'},
+    phppegjs: {
+        parserNamespace: 'ESQuery',
+        parserClassName: 'InternalParser',
+    },
     plugins: [phppegjs]
   });
 

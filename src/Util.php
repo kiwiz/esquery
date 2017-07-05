@@ -117,4 +117,34 @@ class Util {
 
         return $ret;
     }
+
+    public static function generateKibanaPattern($format) {
+        $fmt_arr = [];
+        $escaped = false;
+
+        $interval_map = [
+            'y' => 'YYYY',
+            'm' => 'MM',
+            'w' => 'WW',
+            'd' => 'DD',
+            'h' => 'HH',
+        ];
+
+        foreach(str_split($format) as $chr) {
+            switch($chr) {
+            case '[':
+                $fmt_arr[] = $chr;
+                $escaped = true;
+                break;
+            case ']':
+                $fmt_arr[] = $chr;
+                $escaped = false;
+                break;
+            default:
+                $fmt_arr[] = $escaped || !array_key_exists($chr, $interval_map) ? $chr:$interval_map[$chr];
+                break;
+            }
+        }
+        return implode('', $fmt_arr);
+    }
 }
