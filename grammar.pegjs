@@ -93,7 +93,7 @@ Integer
 WildCardValue
   = '"' chrs:DoubleQuotedChar* '"' { return [[implode('', $chrs)], false]; }
   / "'" chrs:SingleQuotedChar* "'" { return [[implode('', $chrs)], false]; }
-  / !"NOT" !"AND" !"OR" chunks:WildCardChunk* { return [$chunks, true]; }
+  / !"NOT" !"AND" !"OR" chunks:WildCardChunk+ { return [$chunks, true]; }
 
 WildCardChunk
   = '*' { return Token::W_STAR; }

@@ -84,7 +84,7 @@ class Result implements \JsonSerializable {
             $this->client = $this->getConnection();
         }
         if(is_null($this->query)) {
-            throw new ElasticException('No query');
+            throw new Exception('No query');
         }
 
         list($query_data, $meta) = $this->constructQuery($this->source, $this->query, $this->aggs, $this->post_query, $this->settings);
@@ -109,7 +109,7 @@ class Result implements \JsonSerializable {
             $state = [];
             do {
                 if(!array_key_exists('_scroll_id', $response)) {
-                    throw new ElasticException('No scroll id');
+                    throw new Exception('No scroll id');
                 }
 
                 $response = $this->client->scroll([
@@ -228,7 +228,7 @@ class Result implements \JsonSerializable {
             return null;
         }
         if($query[0] !== Token::C_SEARCH && is_null($source)) {
-            throw new ElasticException('No source data for query');
+            throw new Exception('No source data for query');
         }
 
         // There are 2 types of queries. Process each one separately.
@@ -253,7 +253,7 @@ class Result implements \JsonSerializable {
             }
             break;
         default:
-            throw new ElasticException('Unexpected query type');
+            throw new Exception('Unexpected query type');
         }
 
         // Add time range filter.
@@ -352,7 +352,7 @@ class Result implements \JsonSerializable {
                 return $this->processList($node[1], $arr, $inline);
 
             default:
-                throw new ElasticException('Unknown filter type');
+                throw new Exception('Unknown filter type');
         }
     }
 
@@ -381,7 +381,7 @@ class Result implements \JsonSerializable {
     private function processList($field, $arr, $inline) {
         if($inline) {
             if(count($arr) > 1000) {
-                throw new ElasticException('Too many entries in list');
+                throw new Exception('Too many entries in list');
             }
             return ['query_string' => [
                     'default_field' => $field,
@@ -456,7 +456,7 @@ class Result implements \JsonSerializable {
                  break;
 
             default:
-                throw new ElasticException('Unknown agg type');
+                throw new Exception('Unknown agg type');
         }
 
         if($i + 1 < count($queries)) {
@@ -516,7 +516,7 @@ class Result implements \JsonSerializable {
     private function processAggResults($response, $meta) {
         $aggs = $response['aggregations'];
         if(!count($aggs)) {
-            throw new ElasticException('No keys in aggregation');
+            throw new Exception('No keys in aggregation');
         }
         $ret = $this->processAggResultsRecurse(null, $aggs, $meta['aggs'], 0);
 
@@ -641,7 +641,7 @@ class Result implements \JsonSerializable {
                 $ret = array_values($ret_map);
                 break;
             default:
-                throw new ElasticException('Unexpected command');
+                throw new Exception('Unexpected command');
         }
 
         // If we wanted a count, generate it now.
