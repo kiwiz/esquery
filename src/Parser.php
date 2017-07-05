@@ -123,7 +123,7 @@ class Parser extends InternalParser {
                 return $node[1] . ':/' . $node[2] . '/';
 
             case Token::Q_QUERYSTRING:
-                return (is_null($node[1]) ? '':$node[1] . ':') . Util::escapeGroup($node[2][0], $node[2][1]);
+                return (is_null($node[1]) ? '':($node[1] . ':')) . Util::escapeGroup($node[2][0], $node[2][1]);
 
             default:
                 throw new Exception('Unknown filter type');
