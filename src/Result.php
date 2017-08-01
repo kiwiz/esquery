@@ -139,7 +139,7 @@ class Result implements \JsonSerializable {
     /**
      * Construct the query portion of the request body.
      */
-    private function constructQuery($source, $query, $aggs, $post_query, $settings) {
+    public function constructQuery($source, $query, $aggs, $post_query, $settings) {
         $query_data = [
             'ignore_unavailable' => true,
         ];
@@ -241,7 +241,7 @@ class Result implements \JsonSerializable {
             $filters = $query[3];
             $terms = [];
             foreach($source as $row) {
-                $terms[] = $row[$query[1]];
+                $terms[] = [[$row[$query[1]]], true];
             }
             $filter = [Token::X_LIST, $query[2], $terms, false];
 
@@ -344,7 +344,7 @@ class Result implements \JsonSerializable {
                 $inline = $node[3];
                 $arr = $is_arr ? $node[2]:$this->getList($node[2]);
                 if($is_arr) {
-                    $arr = array_map(function($x) { return Util::escapeGroup([$x]); }, $arr);
+                    $arr = array_map(function($x) { return Util::escapeGroup($x[0], $x[1]); }, $node[2]);
                 } elseif($inline) {
                     $arr = array_map(function($x) { return Util::escapeString($x, true); }, $arr);
                 }
