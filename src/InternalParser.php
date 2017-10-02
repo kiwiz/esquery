@@ -16,7 +16,7 @@ if (!function_exists('ESQuery\\peg_regex_test')) { function peg_regex_test($patt
 
 /* Syntax error exception */
 if (!class_exists("ESQuery\\SyntaxError", false)){
-class SyntaxError extends \Exception
+class SyntaxError extends Exception
 {
     public $expected;
     public $found;
