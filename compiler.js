@@ -16,5 +16,7 @@ fs.readFile('grammar.pegjs', 'utf8', function (err,data) {
     plugins: [phppegjs]
   });
 
+  // Subclass SyntaxError from ESQuery\Exception
+  parser = parser.replace('extends \\Exception', 'extends Exception');
   console.log(parser);
 });
