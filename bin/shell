@@ -1,0 +1,42 @@
+#!/usr/bin/php
+<?php
+
+require('vendor/autoload.php');
+
+const RANGE = 10;
+
+$settings = [
+    'index' => '[filebeat-6.2.3]-Y.m.d',
+    'date_based' => true,
+    'date_field' => '@timestamp',
+];
+
+while(($cmd_str = readline('> ')) !== false) {
+    if(strlen($cmd_str) == 0) {
+        continue;
+    }
+    if($cmd_str == 'exit') {
+        break;
+    }
+
+    readline_add_history($cmd_str);
+    try {
+        $engine = new \ESQuery\Engine($cmd_str, $settings);
+    } catch(\ESQuery\SyntaxError $e) {
+        $start = $e->grammarOffset < (RANGE / 2) ? 0: $e->grammarOffset - (RANGE / 2);
+        $end = $start + RANGE;
+        $pos = $e->grammarOffset < (RANGE / 2) ? $e->grammarOffset:(RANGE / 2);
+        printf("%s\n%s\n%s\n",
+            $e->getMessage(),
+            substr($cmd_str, $start, $end),
+            str_repeat(' ', $pos) . '^'
+        );
+        continue;
+    }
+
+    $res = $engine->execute();
+
+    foreach($res as $line) {
+        print(json_encode($line) . "\n");
+    }
+}

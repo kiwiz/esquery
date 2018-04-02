@@ -36,6 +36,34 @@ class SyntaxError extends Exception
     }
 };}
 
+/* Location */
+if (!class_exists("ESQuery\\Location", false)){
+class Location
+{
+    public $start;
+    public $end;
+    public function __construct($start, $end)
+    {
+        $this->start = $start;
+        $this->end = $end;
+    }
+};}
+
+/* LocationPosition */
+if (!class_exists("ESQuery\\LocationPosition", false)){
+class LocationPosition
+{
+    public $offset;
+    public $line;
+    public $column;
+    public function __construct($offset, $line, $column)
+    {
+        $this->offset = $offset;
+        $this->line = $line;
+        $this->column = $column;
+    }
+};}
+
 class InternalParser{
 
 
@@ -63,7 +91,7 @@ class InternalParser{
 
 
     private function text() {
-      return substr($this->input, $this->peg_reportedPos, $this->peg_reportedPos + $this->peg_currPos);
+      return mb_substr($this->input, $this->peg_reportedPos, $this->peg_currPos - $this->peg_reportedPos, "UTF-8");
     }
 
     private function offset() {
@@ -78,6 +106,17 @@ class InternalParser{
     private function column() {
       $compute_pd = $this->peg_computePosDetails($this->peg_reportedPos);
       return $compute_pd["column"];
+    }
+
+    private function location(){  
+        $offset_start = $this->peg_reportedPos;
+        $offset_end = $this->peg_currPos;
+        $compute_pd_start = $this->peg_computePosDetails($offset_start);
+        $compute_pd_end = $this->peg_computePosDetails($offset_end);
+        return new Location(
+            new LocationPosition($offset_start, $compute_pd_start["line"], $compute_pd_start["column"]),
+            new LocationPosition($offset_end, $compute_pd_end["line"], $compute_pd_end["column"])
+        );
     }
 
     private function expected($description) {
@@ -3946,8 +3985,8 @@ class InternalParser{
     $this->peg_c6 = function($first,$rest) {
         return Util::assoc($first, $rest, 1);
       };
-    $this->peg_c7 = "$";
-    $this->peg_c8 = array( "type" => "literal", "value" => "$", "description" => "\"$\"" );
+    $this->peg_c7 = "\$";
+    $this->peg_c8 = array( "type" => "literal", "value" => "\$", "description" => "\"\\\$\"" );
     $this->peg_c9 = "date_field";
     $this->peg_c10 = array( "type" => "literal", "value" => "date_field", "description" => "\"date_field\"" );
     $this->peg_c11 = function($key,$val) { return [$key, $val]; };

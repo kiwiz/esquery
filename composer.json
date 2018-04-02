@@ -14,7 +14,7 @@
         }
     ],
     "require": {
-        "elasticsearch/elasticsearch": "^2.0",
+        "elasticsearch/elasticsearch": ">=2.0",
         "kunststube/rison": "^0.92.1"
     },
     "require-dev": {
