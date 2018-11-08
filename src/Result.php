@@ -13,6 +13,7 @@ namespace ESQuery;
  *  from - From date when querying. [time()]
  *  size - Max result size. [100]
  *  index - Base name of the index to query on. []
+ *  ssl_cert - Path to CA Cert, if the host uses HTTPS. []
  *  date_field - The date field to query on. []
  *  date_based - Whether the index is date based. [false]
  *
@@ -367,12 +368,16 @@ class Result implements \JsonSerializable {
 
     public function getConnection() {
         $host = Util::get($this->settings, 'host');
+        $ssl_cert = Util::get($this->settings, 'ssl_cert');
         if(!is_null($this->conn_provider)) {
             return call_user_func($this->conn_provider, $host);
         } else {
             $cb = \Elasticsearch\ClientBuilder::create();
             if(!is_null($host)) {
                 $cb->setHosts([$host]);
+            }
+            if(!is_null($ssl_cert)) {
+                $cb->setSSLVerification($ssl_cert);
             }
             return $cb->build();
         }
