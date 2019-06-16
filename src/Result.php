@@ -413,7 +413,6 @@ class Result implements \JsonSerializable {
                 'index' => 'lookup_tables',
                 'type' => 'esq_lookup',
                 'id' => $id,
-                'ttl' => '1m',
                 'body' => $doc
             ]);
 
